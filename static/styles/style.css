@@ -1,0 +1,26 @@
+body {
+    font-family: Calibri, Arial, Helvetica, sans-serif;
+    color: #222222;
+    background-color: #fff;
+    margin: 10px;
+}
+.main_container {
+    display: flex;
+    flex-direction: row;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    vertical-align:top;
+    padding: 10px;
+    border: 0px solid black;
+    text-align: center;
+    font-size: large;
+}
+
+.svg_line_chart {
+    float:left;
+    margin-top: 10px;
+}
+

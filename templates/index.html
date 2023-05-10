@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>InfoVis UE 2023</title>
+
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/style.css')}}">
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
+
+</head>
+<body >
+
+<h1>InfoVis UE 2023 - Exercise 2</h1>
+<p>Enter your name and matrikelnummer</p>
+
+
+<div id="main_container" class="main_container">
+  <div class="container">
+    <label>Indicator:</label>
+    <select id="indicator_dropdown" class="dropdown">
+{#         {% for key in countries_data[:100] %}#}
+{#            <option value="{{ key['Country Name'] }}">{{ key['Country Name'] }}</option>#}
+{#         {% endfor %}#}
+    </select>
+      <svg id="svg_map"></svg>
+  </div>
+  <div class="container">
+    <p id="country">Country Name</p>
+    <div id="svg_plot"></div>
+  </div>
+</div>
+
+<div id="svg_line_chart"></div>
+
+<script src ="{{url_for('static',filename='js/map.js')}}"></script>
+<script src ="{{url_for('static',filename='js/scatter.js')}}"></script>
+<script>
+    var test = {{ pca_data | safe}}
+    var test2 = {{ countries_data | safe }}
+
+    const dropdown = document.getElementById("indicator_dropdown");
+    const firstElement = test2[0];
+
+    const keys = Object.keys(firstElement).slice(3);
+    for (const key of keys) {
+      const option = document.createElement("option");
+      option.text = key;
+      dropdown.add(option);
+    }
+
+    buildScatterplot(test)
+    initMap(test2)
+</script>
+</body>
+</html>
