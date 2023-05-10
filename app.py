@@ -16,11 +16,11 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 def data():
     df = pd.read_csv('static/data/agriRuralDevelopmentFilled.csv', index_col=0)
 
-    random_countries = df['Country Name'].sample(n=40)
+    random_countries = pd.Series(df['Country Name'].unique()).sample(n=40)
     random_sample = df[df['Country Name'].isin(random_countries)]
     countries = random_sample.to_json(orient='records')
 
-    #PCA
+    # PCA
     X = random_sample.loc[random_sample['year'] == random_sample['year'].max(), 'Access to electricity (% of population)':'Surface area (sq. km)']
     X = StandardScaler().fit_transform(X)
 
