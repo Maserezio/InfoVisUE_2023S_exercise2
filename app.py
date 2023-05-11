@@ -24,11 +24,12 @@ def data():
     X = random_sample.loc[random_sample['year'] == random_sample['year'].max(), 'Access to electricity (% of population)':'Surface area (sq. km)']
     X = StandardScaler().fit_transform(X)
 
-    # Compute the PCA with 2 components
+    # Computing the PCA with 2 components
     pc = PCA(n_components=2).fit_transform(X)
 
     df_pca = pd.DataFrame({
         'Country Name': random_sample['Country Name'].unique(),
+        'Country Code': random_sample['Country Code'].unique(),
         'PC1': pc[:, 0],
         'PC2': pc[:, 1]
     }).to_json(orient='records')
