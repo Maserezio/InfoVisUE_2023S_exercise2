@@ -3,7 +3,6 @@ function initScatterplot(data) {
     const width = 600 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
-    // Append the SVG object to the body of the page
     const svg = d3.select("#svg_plot")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -11,7 +10,6 @@ function initScatterplot(data) {
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    // Add X axis
     const x = d3.scaleLinear()
         .domain([d3.min(data, d => d.PC1) - 1, d3.max(data, d => d.PC1) + 1])
         .range([0, width]);
@@ -19,14 +17,12 @@ function initScatterplot(data) {
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x));
 
-    // Add Y axis
     const y = d3.scaleLinear()
         .domain([d3.min(data, d => d.PC2) - 1, d3.max(data, d => d.PC2) + 1])
         .range([height, 0]);
     svg.append("g")
         .call(d3.axisLeft(y));
 
-    // Add dots
     svg.selectAll("dot")
         .data(data)
         .enter()

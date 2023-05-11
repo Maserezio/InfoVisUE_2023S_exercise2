@@ -4,26 +4,20 @@ let map = null;
 let mapData = null;
 
 function initMap(countryArray) {
-    // loads the world map as topojson
     d3.json("../static/data/world-topo.json").then(function (countries) {
-        // defines the map projection method and scales the map within the SVG
         let projection = d3.geoEqualEarth()
             .scale(180)
             .translate([mapWidth / 2, mapHeight / 2]);
 
-        // generates the path coordinates from topojson
         let path = d3.geoPath()
             .projection(projection);
 
-        // configures the SVG element
         let svg = d3.select("#svg_map")
             .attr("width", mapWidth)
             .attr("height", mapHeight);
 
-        // map geometry
         mapData = topojson.feature(countries, countries.objects.countries).features;
 
-        // generates and styles the SVG path
         map = svg.append("g")
             .selectAll('path')
             .data(mapData)
@@ -43,7 +37,6 @@ function initMap(countryArray) {
                 }
             });
 
-        // add hover event listener to highlight corresponding country on the map
         svg.selectAll('path')
             .on('mouseover', function (d) {
                 d3.select(this)
@@ -61,6 +54,22 @@ function initMap(countryArray) {
                     .style('fill', 'red');
                 d3.select("#country")
                     .text(this.getAttribute("name"))
+                const data = countryArray.filter(item => item['Country Code'] === this.getAttribute("code") && item['year'] === 2020);
+
+                const p = d3.select("#info")
+                    .selectAll("span")
+                    .data(data);
+
+                p.enter()
+                    .append("span")
+                    .merge(p)
+                    .html(function (d) {
+                        const entries = Object.entries(d);
+                        const firstElement = entries[0];
+                        const lastTen = entries.slice(-10);
+                        const result = [firstElement, ...lastTen];
+                        return result.map(([key, value]) => `${key}: ${value}<br>`).join("");
+                    });
             })
             .on('mouseout', function (d) {
                 d3.select(this)
@@ -85,28 +94,29 @@ function initMap(countryArray) {
                     .style('fill', 'blue');
                 d3.select("#country")
                     .text("Country Name")
+                d3.select("#info").selectAll("span").remove()
             });
 
-        // svg.selectAll('path').on('click', function (d) {
-        //     d3.select(this);
-        //     let selectedOption = d3.select('select[id="indicator_dropdown"] option:checked').node().value;
-        //     const countryName = this.getAttribute('code');
-        //
-        //     const filteredArray = countryArray.filter(item => item['Country Code'] === countryName)
-        //         .map(item => ({
-        //             'Country Name': item['Country Name'],
-        //             'Country Code': item['Country Code'],
-        //             'year': item['year'],
-        //             [selectedOption]: item[selectedOption]
-        //         }));
-        //
-        //     if (filteredArray.length !== 0) {
-        //         initLineChart(filteredArray);
-        //     }
-        //
-        // });
+        svg.selectAll('path').on('click', function (d) {
+            d3.select(this);
+            let selectedOption = d3.select('select[id="indicator_dropdown"] option:checked').node().value;
+            const countryCode = this.getAttribute('code');
 
+            const filteredArray = countryArray.filter(item => item['Country Code'] === countryCode)
+                .map(item => ({
+                    'Country Name': item['Country Name'],
+                    'Country Code': item['Country Code'],
+                    'year': item['year'],
+                    [selectedOption]: item[selectedOption]
+                }));
+
+            if (filteredArray.length !== 0) {
+                if (!d3.select("#svg_linechart svg g").empty()) {
+                    updateLineChart(filteredArray, selectedOption, this.getAttribute('name'));
+                } else {
+                    initLineChart(filteredArray, selectedOption, this.getAttribute('name'));
+                }
+            }
+        });
     });
 }
-
-
