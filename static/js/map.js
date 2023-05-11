@@ -66,7 +66,7 @@ function initMap(countryArray) {
                     .html(function (d) {
                         const entries = Object.entries(d);
                         const firstElement = entries[0];
-                        const lastTen = entries.slice(-10);
+                        const lastTen = entries.slice(-20);
                         const result = [firstElement, ...lastTen];
                         return result.map(([key, value]) => `${key}: ${value}<br>`).join("");
                     });
